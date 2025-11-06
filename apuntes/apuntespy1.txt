@@ -1,0 +1,35 @@
+codigo asking
+alt+64 = @
+
+procesador = (01000000)
+RAM = (aff11aff11a)
+
+ejemplo de prgramacion en python:
+
+#texto (solo letras)
+#texto (letras con simbolos y/o numeros)
+#numeros (enteros)
+#numeros (decimales)
+#booleanos(falso o verdadero)
+#indefinido (undefined)
+
+
+entrada_datos = input("digite algo: ")
+print ("usted digito lo siguiente: ", entrada_datos)
+tipo_dato = "undefinido"
+
+if(entrada_datos.isdigit()):
+    print ("el valor digitado es un digito")
+    if(int(entrada_datos)< 0):
+        print("el digito es un negativo")
+    else:
+        print("el digito es positivo")
+elif (entrada_datos.isalpha()):
+    print ("el digito es alfanumerico")
+else:
+    print("el valor digitado no es un digito.")
+
+1. investigar las diferentes funciones 
+
+ejemplo: .isalpha .isdigit 
+
