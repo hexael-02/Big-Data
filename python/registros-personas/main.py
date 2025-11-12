@@ -4,18 +4,36 @@ from datetime import date, datetime
 
 ARCHIVO_CSV = "registro_personas.csv"
 CAMPOS = [
-    "id", "cedula", "nombre", "apellido", "sexo", "fecha_nacimiento", "edad", "ocupacion", "empresa", "tipo_contrato", "es_asegurado", "tipo_sangre", "direccion", "telefono_residencial", "telefono_celular"
+    'id', 'cedula', 'nombre', 'apellido', 'sexo', 'fecha_nacimiento', 'edad', 'ocupacion', 'empresa', 'tipo_contrato', 'es_asegurado', 'tipo_sangre', 'direccion', 'telefono_residencial', 'telefono_celular'
 ]
 
 
 # --------------------- Funciones auxiliares -----------------------
+def calcular_edad (fecha_nacimiento_str):
 
+    try:
+        fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, '%y-%m-%d').date()
+       
+    except ValueError:
+        return None  # retorna none si el formato es incorrecto 
+    hoy = date.today()
 
-def calcular_edad ():
-    pass 
+    #restar los años 
+    edad = hoy.year - fecha_nacimiento.year
+    
+    #ajustar si todavia no ha cumplido años este años
+    if (hoy.month, hoy.day ) < (fecha_nacimiento.month, fecha_nacimiento.day):
+        edad -= 1
+
+    return edad
 
 def inicializar_csv():
-    pass
+    if not os.path.exists(ARCHIVO_CSV):
+        with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
+            writer = csv.DictReader(archivo, fieldnames=CAMPOS)
+            writer.writeheader()
+            print(f"archivo '{ARCHIVO_CSV}' creado con exito.")
+
 
 def obtener_datos():
     pass
