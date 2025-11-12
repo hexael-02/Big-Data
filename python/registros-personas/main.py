@@ -4,27 +4,25 @@ from datetime import date, datetime
 
 ARCHIVO_CSV = "registro_personas.csv"
 CAMPOS = [
-    'id', 'cedula', 'nombre', 'apellido', 'sexo', 'fecha_nacimiento', 'edad', 'ocupacion', 'empresa', 'tipo_contrato', 'es_asegurado', 'tipo_sangre', 'direccion', 'telefono_residencial', 'telefono_celular'
+    "id", "cedula", "nombre", "apellido", "sexo", "fecha_nacimiento", "edad", "ocupacion", "empresa", "tipo_contrato", "es_asegurado", "tipo_sangre", "direccion", "telefono_residencial", "telefono_celular"
 ]
 
 
 # --------------------- Funciones auxiliares -----------------------
-def calcular_edad (fecha_nacimiento_str):
 
+
+def calcular_edad (fecha_nacimiento_str):
     try:
         fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, '%y-%m-%d').date()
-       
     except ValueError:
-        return None  # retorna none si el formato es incorrecto 
+      return None
+     
     hoy = date.today()
 
-    #restar los años 
     edad = hoy.year - fecha_nacimiento.year
-    
-    #ajustar si todavia no ha cumplido años este años
-    if (hoy.month, hoy.day ) < (fecha_nacimiento.month, fecha_nacimiento.day):
-        edad -= 1
 
+    if (hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day):
+          edad -= 1
     return edad
 
 def inicializar_csv():
@@ -33,16 +31,71 @@ def inicializar_csv():
             writer = csv.DictReader(archivo, fieldnames=CAMPOS)
             writer.writeheader()
             print(f"archivo '{ARCHIVO_CSV}' creado con exito.")
-
-
+        
 def obtener_datos():
-    pass
+    datos = []
+    try:
+        with open(ARCHIVO_CSV, 'r', newline='', encoding='utf-8') as archivo:
+            reader = csv.DictReader(archivo)
 
-def obtener_siguiente_ID():
-    pass
+            for fila in reader:
+                datos.append(fila)
+    except FileNotFoundError:
+        pass #si no exist, retorna lista vacia. la funcion crear se encarga de crearlo
+
+    return datos
+
+def obtener_siguiente_ID(datos):
+    #clacula el proximo ID a partir de lso datos existentes
+    if not datos:
+        return 1
+    max_id = max(int(persona['id']) for persona in datos if persona['id'].isdigit())
+
+    return max_id + 1
 #------------------------- funciones CRUD ------------------------------------------
 def crear_registro():
-    print("se a ejecutado la funcion -----> ' crear_registro' con exito")
+    #solicita los datos y crea un nuevo egistro en el csv.
+    inicializar_csv()
+
+    datos = obtener_datos()
+    nuevo_id = obtener_siguiente_ID(datos)
+    print("----------insercion de nuevo registro de personas----------")
+    registro = {
+        "id": str(nuevo_id)
+    }
+    registro['cedula'] = input("Cedula: ")
+    registro['nombre'] = input("Nombre: ")
+    registro['apellido'] = input("Apellido: ")
+    registro['sexo'] = input("Sexo: ")
+
+
+    while True:
+        fecha_nac_str = input("fecha de nacimiento (YYYY-MM-DD): ")
+        edad_calculada = calcular_edad(fecha_nac_str)
+        if edad_calculada is not None:
+            registro["fecha_nacimiento"] = fecha_nac_str
+            registro["edad"] = str(edad_calculada)
+            print(f"edad calculada: {edad_calculada} años")
+            break
+        else:
+            print(" ❌ Formato de fecha incorrecto. use YYYY-MM-DD")
+    
+    registro['ocupacion'] = input ["ocupacion: "]
+    registro['empresa'] = input ["empresa: "]
+    registro ['tipo_contrato'] = input ["tipo_contrato: "]
+    registro['es_asegurado'] = input ["¿es asegurado? (si/no): "]
+    registro['tipo_sangre'] = input ["tipo de sangre: "]
+    registro['direccion'] = input ["direccion: "]
+    registro['telefono_residencial'] = input ["telefono residencial: "]
+    registro['telefono_celular'] = input ["telefono celular: "]
+
+    datos.append(registro)
+    with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
+        writer =csv.DictWriter(writer, fieldnames=CAMPOS)
+        writer.writeheader
+        writer.writerows(datos)
+
+    print(f'regisro con el id {nuevo_id} creado y guardado con exito.')
 
 def leer_registro():
       print("se a ejecutado la funcion -----> 'leer_registro' con exito")
