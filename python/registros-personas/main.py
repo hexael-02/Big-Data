@@ -13,7 +13,7 @@ CAMPOS = [
 
 def calcular_edad (fecha_nacimiento_str):
     try:
-        fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, '%y-%m-%d').date()
+        fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, '%Y-%m-%d').date()
     except ValueError:
       return None
      
@@ -41,7 +41,7 @@ def obtener_datos():
             for fila in reader:
                 datos.append(fila)
     except FileNotFoundError:
-        pass #si no exist, retorna lista vacia. la funcion crear se encarga de crearlo
+        pass #si no existe, retorna lista vacia. la funcion crear se encarga de crearlo
 
     return datos
 
@@ -68,7 +68,6 @@ def crear_registro():
     registro['apellido'] = input("Apellido: ")
     registro['sexo'] = input("Sexo: ")
 
-
     while True:
         fecha_nac_str = input("fecha de nacimiento (YYYY-MM-DD): ")
         edad_calculada = calcular_edad(fecha_nac_str)
@@ -80,25 +79,67 @@ def crear_registro():
         else:
             print(" ❌ Formato de fecha incorrecto. use YYYY-MM-DD")
     
-    registro['ocupacion'] = input ["ocupacion: "]
-    registro['empresa'] = input ["empresa: "]
-    registro ['tipo_contrato'] = input ["tipo_contrato: "]
-    registro['es_asegurado'] = input ["¿es asegurado? (si/no): "]
-    registro['tipo_sangre'] = input ["tipo de sangre: "]
-    registro['direccion'] = input ["direccion: "]
-    registro['telefono_residencial'] = input ["telefono residencial: "]
-    registro['telefono_celular'] = input ["telefono celular: "]
+    registro['ocupacion'] = input ("ocupacion: ")
+    registro['empresa'] = input ("empresa: ")
+    registro ['tipo_contrato'] = input ("tipo de contrato: ")
+    registro['es_asegurado'] = input ("¿es asegurado? (si/no): ")
+    registro['tipo_sangre'] = input ("tipo de sangre: ")
+    registro['direccion'] = input ("direccion: ")
+    registro['telefono_residencial'] = input ("telefono residencial: ")
+    registro['telefono_celular'] = input ("telefono celular: ")
 
     datos.append(registro)
+
     with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
-        writer =csv.DictWriter(writer, fieldnames=CAMPOS)
-        writer.writeheader
+        writer =csv.DictWriter(archivo, fieldnames = CAMPOS)
+        writer.writeheader()
         writer.writerows(datos)
 
     print(f'regisro con el id {nuevo_id} creado y guardado con exito.')
 
 def leer_registro():
-      print("se a ejecutado la funcion -----> 'leer_registro' con exito")
+    datos = obtener_datos()
+    print("\n" + "="*50)
+    print("         Mostrar todos los registros")
+    print("="*50)
+
+
+    if not datos:
+        print("❌ No hay registros de personas guardados.")
+        print("="*50)
+        return
+    
+    encabezado = "{:<5} {:<15} {:<15} {:<15} {:<6} {:<5}".format(
+        "ID", "CEDULA", "Nombre", "Apellido", "Sexo ", "Edad"
+    )
+    separador = "-"* len(encabezado)
+
+    print(encabezado)
+    print(separador)
+
+    for persona in datos:
+        try:
+            fila = "{:<5} {:<15} {:<15} {:<15} {:<6} {:<5}".format(
+                persona.get('id', 'N/A'),
+                persona.get('cedula', 'N/A'),
+                persona.get('nombre', 'N/A'),
+                persona.get('apellido', 'N/A'),
+                persona.get('sexo', 'N/A'),
+                persona.get('edad', 'N/A'),
+            )
+            print(fila)
+           
+            print(f"telfono: {persona.get('telefono_celular', 'N/A' )}")
+            print(f"Direccion: {persona.get( 'direccion', 'N/A' )}")
+            print(f"ocupacion: {persona.get('ocupacion', 'N/A' )}")
+            print(f"empresa: {persona.get('empresa', 'N/A' )}")
+            print(f"tipo de contrato: {persona.get('tipo_contrato', 'N/A')}")
+            print(f"¿es asegurado si/no?: {persona.get('es_asegurado', 'N/A')}") 
+            print(f"tipo de sangre: {persona.get('tipo_sangre', 'N/A')}")
+
+        except Exception as e:
+            print(f"⚠️ Error al leer el registro ID: {persona.get('id', 'desconocido')}. Error: {e}")
+    print("\✅ Lectura de registro completada.")
 
 def actualizar_registro():
       print("se a ejecutado la funcion -----> ' actualizar_registro' con exito")
@@ -118,10 +159,10 @@ def menu_principal():
         print("\n" + "="*40)
         print("     sistema CRUD de personas (csv)")
         print("="*40)
-        print("1. Crear Nuevo Registro (C)")
-        print("2. Mostrar Todos los Registros (R)")
-        print("3. Acualizar Registros por ID (U)")
-        print("4. Eliminar Registro por ID (D)")
+        print("1. Crear Nuevo Registro")        #C
+        print("2. Mostrar Todos los Registros") #R
+        print("3. Acualizar Registros por ID")  #U
+        print("4. Eliminar Registro por ID")    #D
         print("5. Salir")
         print("-" * 40)
         opcion = input("favor digite una de las opciones: ")
@@ -131,7 +172,7 @@ def menu_principal():
         elif(opcion == "2"):
             leer_registro()
         elif(opcion == "3"):
-            actualizar_registro
+            actualizar_registro()
         elif(opcion == "4"):
             eliminar_registro()
         elif(opcion == "5"):
