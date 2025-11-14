@@ -41,7 +41,7 @@ def obtener_datos():
             for fila in reader:
                 datos.append(fila)
     except FileNotFoundError:
-        pass #si no existe, retorna lista vacia. la funcion crear se encarga de crearlo
+        pass #si no exist, retorna lista vacia. la funcion crear se encarga de crearlo
 
     return datos
 
@@ -68,6 +68,7 @@ def crear_registro():
     registro['apellido'] = input("Apellido: ")
     registro['sexo'] = input("Sexo: ")
 
+
     while True:
         fecha_nac_str = input("fecha de nacimiento (YYYY-MM-DD): ")
         edad_calculada = calcular_edad(fecha_nac_str)
@@ -81,7 +82,7 @@ def crear_registro():
     
     registro['ocupacion'] = input ("ocupacion: ")
     registro['empresa'] = input ("empresa: ")
-    registro ['tipo_contrato'] = input ("tipo de contrato: ")
+    registro ['tipo_contrato'] = input ("tipo_contrato: ")
     registro['es_asegurado'] = input ("¿es asegurado? (si/no): ")
     registro['tipo_sangre'] = input ("tipo de sangre: ")
     registro['direccion'] = input ("direccion: ")
@@ -89,9 +90,8 @@ def crear_registro():
     registro['telefono_celular'] = input ("telefono celular: ")
 
     datos.append(registro)
-
     with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
-        writer =csv.DictWriter(archivo, fieldnames = CAMPOS)
+        writer =csv.DictWriter(archivo, fieldnames=CAMPOS)
         writer.writeheader()
         writer.writerows(datos)
 
@@ -138,11 +138,89 @@ def leer_registro():
             print(f"tipo de sangre: {persona.get('tipo_sangre', 'N/A')}")
 
         except Exception as e:
-            print(f"⚠️ Error al leer el registro ID: {persona.get('id', 'desconocido')}. Error: {e}")
+           print(f"⚠️ Error al leer el registro ID: {persona.get('id', 'desconocido')}. Error: {e}")
+
     print("\✅ Lectura de registro completada.")
 
+
 def actualizar_registro():
-      print("se a ejecutado la funcion -----> ' actualizar_registro' con exito")
+    datos = obtener_datos()
+
+    print("\n" + "="*50)
+    print("         actualizar registros por ID")
+    print("="*50)
+    
+    if not datos:
+        print("no hay registrs para actualizar.")
+        return
+    try:
+        id_a_actualizar = input("digite el ID del registro a actualizar: ")
+        id_a_actualizar = str(id_a_actualizar).strip()
+    except:
+        print("ID no valido")
+        return
+    indice_modificar = -1
+    for i, persona in enumerate(datos):
+        if persona.get('id') == id_a_actualizar:
+            indice_modificar = i
+            break
+    if indice_modificar == -1:
+        print(f"no se encontro ningun registro con el ID '{id_a_actualizar}'. ")
+        return
+    registro = datos[indice_modificar]
+    print(f"\n registro encontrado ID: {registro ['id']}): {registro['nombre']} {registro['apellido']}")
+    print("presione ENTER para mantener el valor actual")
+    print("-"*50)
+
+    def pedir_nuevo_valor(campo, valor_actual):
+        nuevo_valor = input(f"{campo.capitalize()} [actual: {valor_actual}]: ")
+        return nuevo_valor if nuevo_valor.strip() else valor_actual
+    
+    registro['cedula'] = pedir_nuevo_valor('cedula', registro['cedula'])
+    registro['nombre'] = pedir_nuevo_valor('nombre', registro['nombre'])
+    registro['apellido'] = pedir_nuevo_valor('apellido', registro['apellido'])
+    registro['sexo'] = pedir_nuevo_valor('sexo', registro['sexo'])
+
+
+    while True:
+        fecha_nac_str_actual = registro.get('fecha_nacimiento', 'N/A')
+        fecha_nac_str_nuevo = input(f"fecha de nacimeinto (YYYY-MM-DD) [Actual: {fecha_nac_str_actual}]: ")
+
+        if not fecha_nac_str_nuevo.strip():
+            print(f"Edad actual: {registro['edad']} años (mantenimiento fecha: {fecha_nac_str_actual})")
+            break
+
+        edad_calculada = calcular_edad(fecha_nac_str_nuevo)
+
+        if edad_calculada is not None:
+            registro['fecha_nacimiento'] = fecha_nac_str_nuevo
+            registro['edad'] = str(edad_calculada)
+            print(f"edad calculada: {edad_calculada} años")
+            break
+        else:
+            print("formato de fechea incorrecto. use YYYY-MM-DD")
+
+    registro['ocupacion'] = pedir_nuevo_valor('ocupacion', registro['ocupacion'])
+    registro['empresa'] = pedir_nuevo_valor('empresa', registro['empresa'])
+    registro['tipo_contrato'] = pedir_nuevo_valor('tipo_contrato',registro['tipo_contrato'])
+    registro['es_asegurado'] = pedir_nuevo_valor('es_asegurado', registro['es_asegurado'])
+    registro['tipo_sangre'] = pedir_nuevo_valor('tipo_sangre', registro['tipo_sangre'])
+    registro['direccion'] = pedir_nuevo_valor('direccion', registro['direccion'])
+    registro['telefono_residencial'] = pedir_nuevo_valor('telefono_residencial', registro['telefono_residencial'])
+    registro['telefono_celular'] = pedir_nuevo_valor('telefono_celular', registro['telefono_celular'])
+
+
+    try:    
+        with open (ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
+            writer = csv.DictWriter(archivo, fieldnames=CAMPOS)
+            writer.writeheader()
+            writer.writerows(datos)
+
+        print(f"\n registro con el ID {id_a_actualizar} ha sido actualizado y guardado con el exito.")
+
+    except Exception as e:
+        print(f"error al guardar el archivo: {e}")
+
 
 def eliminar_registro():
       print("se a ejecutado la funcion -----> ' eliminar_registro' con exito")
@@ -159,10 +237,10 @@ def menu_principal():
         print("\n" + "="*40)
         print("     sistema CRUD de personas (csv)")
         print("="*40)
-        print("1. Crear Nuevo Registro")        #C
-        print("2. Mostrar Todos los Registros") #R
-        print("3. Acualizar Registros por ID")  #U
-        print("4. Eliminar Registro por ID")    #D
+        print("1. Crear Nuevo Registro ")        #CREATE
+        print("2. Mostrar Todos los Registros ") #RREAD
+        print("3. Acualizar Registros por ID ")  #UPDATE
+        print("4. Eliminar Registro por ID ")    #DELETE
         print("5. Salir")
         print("-" * 40)
         opcion = input("favor digite una de las opciones: ")
