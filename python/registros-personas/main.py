@@ -28,7 +28,7 @@ def calcular_edad (fecha_nacimiento_str):
 def inicializar_csv():
     if not os.path.exists(ARCHIVO_CSV):
         with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
-            writer = csv.DictReader(archivo, fieldnames=CAMPOS)
+            writer = csv.DictWriter(archivo, fieldnames=CAMPOS)
             writer.writeheader()
             print(f"archivo '{ARCHIVO_CSV}' creado con exito.")
         
@@ -41,7 +41,7 @@ def obtener_datos():
             for fila in reader:
                 datos.append(fila)
     except FileNotFoundError:
-        pass #si no exist, retorna lista vacia. la funcion crear se encarga de crearlo
+        pass #si no existe, retorna lista vacia. la funcion crear se encarga de crearlo
 
     return datos
 
@@ -68,7 +68,6 @@ def crear_registro():
     registro['apellido'] = input("Apellido: ")
     registro['sexo'] = input("Sexo: ")
 
-
     while True:
         fecha_nac_str = input("fecha de nacimiento (YYYY-MM-DD): ")
         edad_calculada = calcular_edad(fecha_nac_str)
@@ -82,7 +81,7 @@ def crear_registro():
     
     registro['ocupacion'] = input ("ocupacion: ")
     registro['empresa'] = input ("empresa: ")
-    registro ['tipo_contrato'] = input ("tipo_contrato: ")
+    registro ['tipo_contrato'] = input ("tipo de contrato: ")
     registro['es_asegurado'] = input ("¿es asegurado? (si/no): ")
     registro['tipo_sangre'] = input ("tipo de sangre: ")
     registro['direccion'] = input ("direccion: ")
@@ -90,140 +89,118 @@ def crear_registro():
     registro['telefono_celular'] = input ("telefono celular: ")
 
     datos.append(registro)
+
     with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
-        writer =csv.DictWriter(archivo, fieldnames=CAMPOS)
+        writer =csv.DictWriter(archivo, fieldnames = CAMPOS)
         writer.writeheader()
         writer.writerows(datos)
 
     print(f'regisro con el id {nuevo_id} creado y guardado con exito.')
 
 def leer_registro():
+
+    print("---------- Lectura de todos los registros de personas ----------")
     datos = obtener_datos()
-    print("\n" + "="*50)
-    print("         Mostrar todos los registros")
-    print("="*50)
-
-
-    if not datos:
-        print("❌ No hay registros de personas guardados.")
-        print("="*50)
-        return
     
-    encabezado = "{:<5} {:<15} {:<15} {:<15} {:<6} {:<5}".format(
-        "ID", "CEDULA", "Nombre", "Apellido", "Sexo ", "Edad"
-    )
-    separador = "-"* len(encabezado)
+    if not datos:
+        print("ℹ️ No hay registros guardados en el sistema.")
+        return
 
-    print(encabezado)
-    print(separador)
-
+    print(f"Se encontraron {len(datos)} registros:")
+    print("-" * 50)
+    
     for persona in datos:
-        try:
-            fila = "{:<5} {:<15} {:<15} {:<15} {:<6} {:<5}".format(
-                persona.get('id', 'N/A'),
-                persona.get('cedula', 'N/A'),
-                persona.get('nombre', 'N/A'),
-                persona.get('apellido', 'N/A'),
-                persona.get('sexo', 'N/A'),
-                persona.get('edad', 'N/A'),
-            )
-            print(fila)
-           
-            print(f"telfono: {persona.get('telefono_celular', 'N/A' )}")
-            print(f"Direccion: {persona.get( 'direccion', 'N/A' )}")
-            print(f"ocupacion: {persona.get('ocupacion', 'N/A' )}")
-            print(f"empresa: {persona.get('empresa', 'N/A' )}")
-            print(f"tipo de contrato: {persona.get('tipo_contrato', 'N/A')}")
-            print(f"¿es asegurado si/no?: {persona.get('es_asegurado', 'N/A')}") 
-            print(f"tipo de sangre: {persona.get('tipo_sangre', 'N/A')}")
-
-        except Exception as e:
-           print(f"⚠️ Error al leer el registro ID: {persona.get('id', 'desconocido')}. Error: {e}")
-
-    print("\✅ Lectura de registro completada.")
-
+        print(f"ID: {persona['id']}, Cédula: {persona['cedula']}, Nombre: {persona['nombre']}, apellido: {persona['apellido']}, Edad: {persona['edad']}")
+        print(f"  Ocupación: {persona['ocupacion']}, Empresa: {persona['empresa']}, Teléfono: {persona['telefono_celular']}")
+        print("-" * 50)
+    
+    print(f"✅ Se han mostrado {len(datos)} registros con éxito.")
 
 def actualizar_registro():
+
+    print("---------- Actualización de registro de personas por ID ----------")
+    inicializar_csv()
     datos = obtener_datos()
 
-    print("\n" + "="*50)
-    print("         actualizar registros por ID")
-    print("="*50)
-    
     if not datos:
-        print("no hay registrs para actualizar.")
+        print("ℹ️ No hay registros para actualizar.")
         return
-    try:
-        id_a_actualizar = input("digite el ID del registro a actualizar: ")
-        id_a_actualizar = str(id_a_actualizar).strip()
-    except:
-        print("ID no valido")
-        return
-    indice_modificar = -1
+
+    id_a_actualizar = input("Ingrese el ID del registro a actualizar: ")
+    indice_registro = -1
+
+    # Buscar el registro por ID
     for i, persona in enumerate(datos):
-        if persona.get('id') == id_a_actualizar:
-            indice_modificar = i
+        if persona['id'] == id_a_actualizar:
+            indice_registro = i
             break
-    if indice_modificar == -1:
-        print(f"no se encontro ningun registro con el ID '{id_a_actualizar}'. ")
+
+    if indice_registro == -1:
+        print(f"❌ No se encontró ningún registro con el ID {id_a_actualizar}.")
         return
-    registro = datos[indice_modificar]
-    print(f"\n registro encontrado ID: {registro ['id']}): {registro['nombre']} {registro['apellido']}")
-    print("presione ENTER para mantener el valor actual")
-    print("-"*50)
 
-    def pedir_nuevo_valor(campo, valor_actual):
-        nuevo_valor = input(f"{campo.capitalize()} [actual: {valor_actual}]: ")
-        return nuevo_valor if nuevo_valor.strip() else valor_actual
+    registro = datos[indice_registro]
+    print(f"\nRegistro actual para el ID {id_a_actualizar}:")
+    print(f"Nombre: {registro['nombre']}, Apellido: {registro['apellido']}, Cédula: {registro['cedula']}, Edad: {registro['edad']}")
+    print("-" * 30)
+
+    print("Ingrese el nuevo valor para cada campo (deje vacío para mantener el valor actual):")
+
+    # Actualizar campos
+    for campo in CAMPOS:
+        if campo in ['id', 'edad']: # No se permite modificar ID ni edad directamente
+            continue
+
+        nuevo_valor = input(f"{campo.replace('_', ' ').capitalize()} (Actual: {registro[campo]}): ")
+        if nuevo_valor:
+            registro[campo] = nuevo_valor
     
-    registro['cedula'] = pedir_nuevo_valor('cedula', registro['cedula'])
-    registro['nombre'] = pedir_nuevo_valor('nombre', registro['nombre'])
-    registro['apellido'] = pedir_nuevo_valor('apellido', registro['apellido'])
-    registro['sexo'] = pedir_nuevo_valor('sexo', registro['sexo'])
+    # Recalcular la edad si se actualizó la fecha de nacimiento
+    if 'fecha_nacimiento' in registro:
+        while True:
+            edad_calculada = calcular_edad(registro['fecha_nacimiento'])
+            if edad_calculada is not None:
+                registro["edad"] = str(edad_calculada)
+                print(f"Edad recalculada: {edad_calculada} años")
+                break
+            else:
+                print(" ❌ Formato de fecha incorrecto tras la actualización. Por favor, reingrese la fecha.")
+                registro["fecha_nacimiento"] = input("fecha de nacimiento (YYYY-MM-DD): ")
+                
+    # Reemplazar el registro actualizado en la lista
+    datos[indice_registro] = registro
 
-
-    while True:
-        fecha_nac_str_actual = registro.get('fecha_nacimiento', 'N/A')
-        fecha_nac_str_nuevo = input(f"fecha de nacimeinto (YYYY-MM-DD) [Actual: {fecha_nac_str_actual}]: ")
-
-        if not fecha_nac_str_nuevo.strip():
-            print(f"Edad actual: {registro['edad']} años (mantenimiento fecha: {fecha_nac_str_actual})")
-            break
-
-        edad_calculada = calcular_edad(fecha_nac_str_nuevo)
-
-        if edad_calculada is not None:
-            registro['fecha_nacimiento'] = fecha_nac_str_nuevo
-            registro['edad'] = str(edad_calculada)
-            print(f"edad calculada: {edad_calculada} años")
-            break
-        else:
-            print("formato de fechea incorrecto. use YYYY-MM-DD")
-
-    registro['ocupacion'] = pedir_nuevo_valor('ocupacion', registro['ocupacion'])
-    registro['empresa'] = pedir_nuevo_valor('empresa', registro['empresa'])
-    registro['tipo_contrato'] = pedir_nuevo_valor('tipo_contrato',registro['tipo_contrato'])
-    registro['es_asegurado'] = pedir_nuevo_valor('es_asegurado', registro['es_asegurado'])
-    registro['tipo_sangre'] = pedir_nuevo_valor('tipo_sangre', registro['tipo_sangre'])
-    registro['direccion'] = pedir_nuevo_valor('direccion', registro['direccion'])
-    registro['telefono_residencial'] = pedir_nuevo_valor('telefono_residencial', registro['telefono_residencial'])
-    registro['telefono_celular'] = pedir_nuevo_valor('telefono_celular', registro['telefono_celular'])
-
-
-    try:    
-        with open (ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
-            writer = csv.DictWriter(archivo, fieldnames=CAMPOS)
-            writer.writeheader()
-            writer.writerows(datos)
-
-        print(f"\n registro con el ID {id_a_actualizar} ha sido actualizado y guardado con el exito.")
-
-    except Exception as e:
-        print(f"error al guardar el archivo: {e}")
-
+    # Reescribir todo el archivo CSV
+    with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
+        writer = csv.DictWriter(archivo, fieldnames=CAMPOS)
+        writer.writeheader()
+        writer.writerows(datos)
 
 def eliminar_registro():
-      print("se a ejecutado la funcion -----> ' eliminar_registro' con exito")
+    print("---------- Eliminación de registro de personas por ID ----------")
+    inicializar_csv()
+    datos = obtener_datos()
+
+    if not datos:
+        print("ℹ️ No hay registros para eliminar.")
+        return
+
+    id_a_eliminar = input("Ingrese el ID del registro a eliminar: ")
+    
+    # Crear una nueva lista de datos que excluya el registro a eliminar
+    datos_filtrados = [persona for persona in datos if persona['id'] != id_a_eliminar]
+
+    if len(datos_filtrados) == len(datos):
+        print(f"❌ No se encontró ningún registro con el ID {id_a_eliminar}.")
+        return
+    
+    # Reescribir el archivo CSV con los datos filtrados (sin el registro eliminado)
+    with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
+        writer = csv.DictWriter(archivo, fieldnames=CAMPOS)
+        writer.writeheader()
+        writer.writerows(datos_filtrados)
+        
+    print(f'\n✅ Registro con el ID {id_a_eliminar} eliminado y archivo actualizado con éxito.')
 
 def menu_principal():
     #inicializando la funcion crea el archivo csv, donde se guardan los datos 
@@ -237,10 +214,10 @@ def menu_principal():
         print("\n" + "="*40)
         print("     sistema CRUD de personas (csv)")
         print("="*40)
-        print("1. Crear Nuevo Registro ")        #CREATE
-        print("2. Mostrar Todos los Registros ") #RREAD
-        print("3. Acualizar Registros por ID ")  #UPDATE
-        print("4. Eliminar Registro por ID ")    #DELETE
+        print("1. Crear Nuevo Registro")        #C
+        print("2. Mostrar Todos los Registros") #R
+        print("3. Acualizar Registros por ID")  #U
+        print("4. Eliminar Registro por ID")    #D
         print("5. Salir")
         print("-" * 40)
         opcion = input("favor digite una de las opciones: ")
