@@ -1,0 +1,25 @@
+-- Eliminaccion de tablas (si existen, para empezar 
+con un esquema limpio)--
+
+-- DROP TABLE IF EXISTS employ
+
+--paso #1
+drop table if exists Employees
+CREATE TABLE Employees (
+  employee_id SERIAL PRIMARY KEY,
+  first_name VARCHAR(25) NOT NULL,
+  last_name VARCHAR(25) NOT NULL,
+  hire_date Date DEFAULT CURRENT_DATE,
+  job_title VARCHAR(20)
+	
+);
+
+
+--drop table if exists Employees
+insert into Employees values 
+  (1, "jose", "espinal", "11-05-2025", "owner"),
+  (2, "pedro", "albert", "11-05-2025", "programer"),
+  (3, "Juan", "Diaz", "11-05-2025", "manager")
+
+-- SELECT first_name, age
+-- FROM Customers;

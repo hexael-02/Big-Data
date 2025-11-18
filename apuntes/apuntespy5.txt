@@ -1,0 +1,31 @@
+investigar los sigueintes conceptos de base de datos 
+
+
+1.  Dato 
+2.  Informacion 
+3.  Diferencias entre datos e informacion 
+4.  Base de datos
+5.  Tipos de base de datos 
+6.  Características de base de datos relacional
+7.  Características de base de datos no relacional 
+8.  Gestores de base de datos relacional
+9.  Gestores de base de datos no relaciona
+10. SQL
+11. Versiones de SQL
+12. Tipos de datos en SQL 
+13. Componentes de una base de datos relacional
+14. Importancia de las base de datos en big data 
+
+
+
+
+Explicacion cpomo funcionan la connecion de una tabala con otra (de una a muchos)
+==================		=======================
+    Padre				Hijo/a
+==================		=======================
+|ID|CEDULA|NOMBRE|		|ID|CEDULA|NOMBRE|PADRE|
+|1 |  123 |pedro |		|1 |  345 |Carlo |  2  |				
+|2 |  453 |Jose  |		|2 |  875 |Erick |  2  |
+|3 |  234 |Juan  |		|3 |  342 |david |  1  |
+|4 |  165 |Kevin |		|4 |  312 |Rosa  |  3  |
+				|5 |  543 |Marko |  4  |

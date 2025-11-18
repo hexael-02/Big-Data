@@ -26,7 +26,6 @@ if(entrada_datos.isdigit()):
         print("el digito es positivo")
 elif (entrada_datos.isalpha()):
     print ("el digito es alfanumerico")
-
 else:
     print("el valor digitado no es un digito.")
 

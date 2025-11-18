@@ -1,0 +1,30 @@
+el protocolo ip es un protocolo que me permite comunicar computadoras
+entre diferentes redes atravez de los enrutadores (routers)
+
+versiones del protocolo ip: 
+	ipv4: se utiliza solo en redes de computadoras, laptops, 
+		y smartphones
+	ipv6: se utiliza en todos los dispositivos que se conectan a 
+		internet (aparte de los dispositivos que mencionamos en ipv4, le agregamos
+		 las neveras, lavadora, relojes, bombilla, camaras, 
+		sensores, etc..)
+	
+	
+	NOTA #1: con la version 6 del protocolo  IPV6 nace el internet de las
+	 cosas, que años, mas tarde, se renombro a lo que conocems como 
+	"internet del todo"
+	
+	NOTA #2: la verion 6 del protocolo IP nace de la necesidad de conectar
+	 mas equips a nivel mundial, cuando ya se agotaron las direcciones 
+	ipv4, es decir, donde se termina o llega a su limite ipv4, es donde 
+	inicia ipv6
+
+	NOTA #3: ipv5 es mucho mas confiable y seguro que ipv4, debido a que
+ 	al configurar ipv6, se debe configurar de manera nativa en los 
+	enrutadores ip sec (protocolo de escriptacion en conexiones IP).
+	
+	NOTA #4: para lograr la seguridad en ipv4, necesario realizar 
+	configuraciones adicionales y tener un sistema de vpn y de monitoreo 
+	continuo para mitigar y combatir posibles ataques 
+	(internos y externos).
+
