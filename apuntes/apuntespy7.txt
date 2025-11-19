@@ -1,0 +1,102 @@
+CREATE TABLE Employees (
+  employee_id SERIAL PRIMARY KEY,
+  first_name VARCHAR(25) NOT NULL,
+  last_name VARCHAR(25) NOT NULL,
+  hire_date Date DEFAULT CURRENT_DATE,
+  job_title VARCHAR(20)
+	
+);
+
+--run
+
+CREATE TABLE CUSTOMERS (
+    customer_id SERIAL PRIMARY KEY,
+    first_name varchar(50) NOT NULL,
+    last_name varchar (50) not null,
+    phone varchar (20),
+    email varchar (100) UNIQUE
+)
+
+--run
+
+--TABLA VEHICLES (INVENTARIO DE AUTOS)
+
+CREATE TABLE vehicles (
+    vehicle_id SERIAL PRIMARY KEY,
+    vin VARCHAR (17) UNIQUE NOT NULL, --numero de identificacion del vehiculo
+    make VARCHAR (50) NOT NULL,        --marca (e.g., Toyota)
+    model VARCHAR (50) NOT NULL,       --modelo (e.g, corolla)
+    year INT NOT NULL, 
+    color VARCHAR(30),
+    sale_price NUMERIC(12, 2) NOT NULL,
+    status Varchar(20) DEFAULT 'available' --available, sold, service
+)
+
+--run
+
+--TABLA SALES (transacciones)
+
+CREATE TABLE sales (
+    sale_id SERIAL PRIMARY KEY,
+    vehicle_id INT NOT NULL UNIQUE, --un vehiculo solo puede ser vendido una vez
+    costumer_id INT NOT NULL,
+    employee_id INT NOT NULL,       --vendedor qeu hizo la venta
+    sale_date DATE DEFAULT CURRENT_DATE, 
+    final_price NUMERIC(12, 2) NOT NULL,
+    --claves foraneas:
+    CONSTRAINT fk_vehicle
+        FOREIGN KEY (vehicle_id)
+        REFERENCES vehicles(vehicle_id),
+    CONSTRAINT fk_costumer
+        FOREIGN KEY (customer_id)
+        REFERENCES customers(customer_id),
+    CONSTRAINT fk_employees
+        FOREIGN KEY (employee_id)
+        REFERENCES employees(employee_id)
+
+);
+
+--run
+
+CREATE TABLE services (
+    service_id SERIAL PRIMARY KEY,
+    vehicles_id int NOT NULL,
+    service_date DATE NULL NOT,
+    description TEXT,
+    cost NUMERIC (10, 2),
+
+    CONSTRAINT fk_vehicle_service
+        FOREIGN KEY (vehicle_id)
+        REFERENCES vehicles(vehicle_id)
+)
+
+--run
+
+--se debe correr la tabla creada antes de empezar a crear otra 
+
+INSERT INTO employees (first_name, last_name, job_tittle) VALUES 
+('ana', 'garcia', 'sales manager'),
+('pedro', 'lopez', 'sales associate'),
+('Maria', 'Ruiz', 'sales associate');
+
+INSERT INTO customers (first_name, last_name, phone, email) VALUES 
+('javier', 'sanchez', '555-1234', 'javier.s@gmail.com'),
+('Elena', 'Martinez', '555-5678', 'elena.m@gmail.com'),
+('Carlos', 'Diaz', '555-9012', 'carlos.d@gmail.com');
+
+INSERT INTO services (vehicle_id, service_date, description, cost) VALUES 
+(1, '2025-10-01', 'oil change and tire rotation', 150.000),
+(4, '2025-09-15', 'diagnostic check - engine light', 80.00);
+
+--run
+
+--los insert into se pueden ejecutar todos en un mismo bloque de codigo
+
+--SELECT * FROM employees
+--SELECT * FROM customers
+SELECT * FROM vehicles
+--SELECT * FROM services
+--SELECT * From sales
+
+--los select se ejutan de uno en uno 
+
