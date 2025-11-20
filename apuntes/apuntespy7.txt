@@ -74,19 +74,29 @@ CREATE TABLE services (
 
 --se debe correr la tabla creada antes de empezar a crear otra 
 
-INSERT INTO employees (first_name, last_name, job_tittle) VALUES 
-('ana', 'garcia', 'sales manager'),
-('pedro', 'lopez', 'sales associate'),
-('Maria', 'Ruiz', 'sales associate');
 
-INSERT INTO customers (first_name, last_name, phone, email) VALUES 
-('javier', 'sanchez', '555-1234', 'javier.s@gmail.com'),
-('Elena', 'Martinez', '555-5678', 'elena.m@gmail.com'),
-('Carlos', 'Diaz', '555-9012', 'carlos.d@gmail.com');
 
-INSERT INTO services (vehicle_id, service_date, description, cost) VALUES 
-(1, '2025-10-01', 'oil change and tire rotation', 150.000),
-(4, '2025-09-15', 'diagnostic check - engine light', 80.00);
+INSERT INTO vehicles (vin, make, model, year, color, sale_price, status) VALUES
+      ('1ABCDEFGHIJKLMN01', 'Toyota', 'Corolla', 2020, 'Rojo', 18000.00, 'service'),
+      ('2ZYXWVUTSRQPONM02', 'Honda', 'Civic', 2022, 'Azul', 22500.50, 'available'),
+      ('3EDCBA98765432103', 'Ford', 'F-150', 2021, 'Blanco', 35000.00, 'available'),
+      ('45678901234567894', 'Nissan', 'Kicks', 2023, 'Gris', 20000.00, 'service');
+
+INSERT INTO sales (vehicle_id, customer_id, employee_id, sale_date, final_price) VALUES 
+      (1, 1, 1, '2025-11-15', 17500.00),
+      (2, 2, 2, '2025-11-15', 22000.00);
+
+INSERT INTO CUSTOMERS (first_name, last_name, phone, email) values
+      ('Ana', 'Lopez', '809-555-1234', 'ana.lopez@email.com'),
+      ('Carlos', 'Diaz', '829-999-5678', 'carlos.diaz@email.com'),
+      ('Elena', 'Vargas', NULL, 'elena.vargas@email.com');
+
+INSERT INTO services (vehicle_id, service_date, description, cost) VALUES
+    (3, '2025-10-01', 'Cambio de aceite y filtro de aire.', 85.50),
+    (4, '2025-11-18', 'Diagnóstico de frenos, reemplazo de pastillas delanteras.', 350.00);
+
+--tener cuidado a la hora de hacer los insert into ya que si una tabla esta tratando de jalar un id que aun no 
+se a creado el codigo dara error
 
 --run
 
@@ -101,3 +111,7 @@ SELECT * FROM vehicles
 --los select se ejutan de uno en uno 
 
 C7J7LWjcXYdPfVqy
+
+sb_publishable_VPrEZ-gR4M2uZ1cd5JBlXA_FywnYH8X
+
+sb_secret_tHNkIdJ-Tw66fEi8nLBOWA_KMXDorYm
