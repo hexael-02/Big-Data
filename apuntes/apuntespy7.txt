@@ -39,7 +39,7 @@ CREATE TABLE vehicles (
 CREATE TABLE sales (
     sale_id SERIAL PRIMARY KEY,
     vehicle_id INT NOT NULL UNIQUE, --un vehiculo solo puede ser vendido una vez
-    costumer_id INT NOT NULL,
+    customer_id INT NOT NULL,
     employee_id INT NOT NULL,       --vendedor qeu hizo la venta
     sale_date DATE DEFAULT CURRENT_DATE, 
     final_price NUMERIC(12, 2) NOT NULL,
@@ -60,8 +60,8 @@ CREATE TABLE sales (
 
 CREATE TABLE services (
     service_id SERIAL PRIMARY KEY,
-    vehicles_id int NOT NULL,
-    service_date DATE NULL NOT,
+    vehicle_id int NOT NULL,
+    service_date DATE NOT NULL,
     description TEXT,
     cost NUMERIC (10, 2),
 
@@ -100,3 +100,4 @@ SELECT * FROM vehicles
 
 --los select se ejutan de uno en uno 
 
+C7J7LWjcXYdPfVqy

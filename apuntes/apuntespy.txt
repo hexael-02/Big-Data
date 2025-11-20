@@ -47,9 +47,7 @@ print(VALOR_VARIABLE)
 int= interger (entero)
 
 ejemplo de programacion en python:
-    
-#despedida del programa
-#aun no ha nacido  
+#aun no has nacido 
 #bebe
 #niño
 #adolecente
@@ -76,7 +74,54 @@ elif(edad >= 0 and edad <=3):
     print("usted es un/a bebe")
 elif(edad >= 3 and edad <=10):
     print("usted es un/a niño")
-elif(edad >= 11 and edad <=14):
+elif(edad >= 12 and edad <=14):
+    print("usted es un/a adolecente")
+elif(edad >= 15 and edad <=17):
+    print("usted es un/a joven")
+elif(edad >= 18 and edad <=25 ):
+    print("usted es un/a adulto/a jovem")
+elif(edad >= 26 and edad <=39):
+    print("usted es un/a adulto/a mayor")
+elif(edad >= 40 and edad <=59):
+    print("usted es un/a adulto/a pelia'o ")
+elif(edad >= 60 and edad <=84):
+    print("usted es un/a viejo")
+elif(edad >= 85 and edad <=99):
+    print("usted esta viviendo tiempo extra")
+    
+else:
+    print("usted es un JABLADOR/A")
+    
+#despedida del programa
+print("<---------------------------------------------------------->")
+print("fin del programa")#aun no has nacido 
+#bebe
+#niño
+#adolecente
+#joven
+#adulto/a joven
+#adulto/a mayor
+#adulto/a pelia'o
+#viejo/a
+#viviendo tiempo extra 
+#jablador/a
+
+#le damos la bienvenida al programa 
+print("bienvenido/a al programa de registro")
+print("desarrollado por: Jose M. espinal")
+print("<------------------------------------------------>")
+
+#indicamos al usuario que escriba su edad
+edad = int(input("digita tu edad por favor: "))
+print("<---------------------------------------->")
+
+if (edad < 0):
+    print("usted aun no ha nacido")
+elif(edad >= 0 and edad <=3):
+    print("usted es un/a bebe")
+elif(edad >= 3 and edad <=10):
+    print("usted es un/a niño")
+elif(edad >= 12 and edad <=14):
     print("usted es un/a adolecente")
 elif(edad >= 15 and edad <=17):
     print("usted es un/a joven")
@@ -87,7 +132,7 @@ elif(edad >= 26 and edad <=39):
 elif(edad >= 40 and edad <=59):
     print("usted es un/a adulto/a pelia'o ")
 elif(edad >= 60 and edad <=84):
-    print("usted es un/a viejo/a")
+    print("usted es un/a viejo")
 elif(edad >= 85 and edad <=99):
     print("usted esta viviendo tiempo extra")
     
@@ -99,21 +144,5 @@ print("<---------------------------------------------------------->")
 print("fin del programa")
 
 tarea:
-	1. Investiga la solucion de la sintaxis de error o valueError al poner cualquier otro valor que no sea entero
-	
-	solucion: 
-
-#indicamos al usuario que escriba su edad 
-
-#utilizamos un bloque de codigo while true con un try except ValueError para mostrar al usuario que solo puede escribir valores enteros.
-while True:
-    try: 
-         edad = int(input("digita tu edad por favor: "))
-         break
-    except ValueError:
-        print("ERROR: solo se permiten numeros enteros para la edad! intentelo de nuevo")
-print("<---------------------------------------->")
-
-#Estructura de control if else para toma de decision de acuerdo al rango de edad 
-
-
+	1. agragarle una extructura de control inclusiva al programa ("masculino o femenino")
+	2. Investiga la solucion de la sintaxis de error al poner cualquier otro valor que no sea entero
