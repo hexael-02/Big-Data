@@ -28,7 +28,7 @@ def calcular_edad (fecha_nacimiento_str):
 def inicializar_csv():
     if not os.path.exists(ARCHIVO_CSV):
         with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
-            writer = csv.DictWriter(archivo, fieldnames=CAMPOS)
+            writer = csv.DictReader(archivo, fieldnames=CAMPOS)
             writer.writeheader()
             print(f"archivo '{ARCHIVO_CSV}' creado con exito.")
         
@@ -41,7 +41,7 @@ def obtener_datos():
             for fila in reader:
                 datos.append(fila)
     except FileNotFoundError:
-        pass #si no existe, retorna lista vacia. la funcion crear se encarga de crearlo
+        pass #si no exist, retorna lista vacia. la funcion crear se encarga de crearlo
 
     return datos
 
@@ -68,11 +68,12 @@ def crear_registro():
     registro['apellido'] = input("Apellido: ")
     registro['sexo'] = input("Sexo: ")
 
+
     while True:
         fecha_nac_str = input("fecha de nacimiento (YYYY-MM-DD): ")
         edad_calculada = calcular_edad(fecha_nac_str)
         if edad_calculada is not None:
-            registro["fecha_nacimiento"] = fecha_nac_str
+            registro["fecha de nacimiento"] = fecha_nac_str
             registro["edad"] = str(edad_calculada)
             print(f"edad calculada: {edad_calculada} años")
             break
@@ -89,16 +90,14 @@ def crear_registro():
     registro['telefono_celular'] = input ("telefono celular: ")
 
     datos.append(registro)
-
     with open(ARCHIVO_CSV, 'w', newline='', encoding='utf-8') as archivo:
-        writer =csv.DictWriter(archivo, fieldnames = CAMPOS)
+        writer =csv.DictWriter(archivo, fieldnames=CAMPOS)
         writer.writeheader()
         writer.writerows(datos)
 
     print(f'regisro con el id {nuevo_id} creado y guardado con exito.')
 
 def leer_registro():
-
     print("---------- Lectura de todos los registros de personas ----------")
     datos = obtener_datos()
     
@@ -111,13 +110,12 @@ def leer_registro():
     
     for persona in datos:
         print(f"ID: {persona['id']}, Cédula: {persona['cedula']}, Nombre: {persona['nombre']}, apellido: {persona['apellido']}, Edad: {persona['edad']}")
-        print(f"  Ocupación: {persona['ocupacion']}, Empresa: {persona['empresa']}, Teléfono: {persona['telefono_celular']}")
+        print(f" Ocupación: {persona['ocupacion']}, Empresa: {persona['empresa']}, Teléfono: {persona['telefono_celular']}")
         print("-" * 50)
     
     print(f"✅ Se han mostrado {len(datos)} registros con éxito.")
 
 def actualizar_registro():
-
     print("---------- Actualización de registro de personas por ID ----------")
     inicializar_csv()
     datos = obtener_datos()
@@ -165,7 +163,7 @@ def actualizar_registro():
                 break
             else:
                 print(" ❌ Formato de fecha incorrecto tras la actualización. Por favor, reingrese la fecha.")
-                registro["fecha_nacimiento"] = input("fecha de nacimiento (YYYY-MM-DD): ")
+                registro["fecha de nacimiento"] = input("fecha de nacimiento (YYYY-MM-DD): ")
                 
     # Reemplazar el registro actualizado en la lista
     datos[indice_registro] = registro
@@ -175,6 +173,8 @@ def actualizar_registro():
         writer = csv.DictWriter(archivo, fieldnames=CAMPOS)
         writer.writeheader()
         writer.writerows(datos)
+
+
 
 def eliminar_registro():
     print("---------- Eliminación de registro de personas por ID ----------")
@@ -202,6 +202,7 @@ def eliminar_registro():
         
     print(f'\n✅ Registro con el ID {id_a_eliminar} eliminado y archivo actualizado con éxito.')
 
+
 def menu_principal():
     #inicializando la funcion crea el archivo csv, donde se guardan los datos 
     inicializar_csv()
@@ -214,10 +215,10 @@ def menu_principal():
         print("\n" + "="*40)
         print("     sistema CRUD de personas (csv)")
         print("="*40)
-        print("1. Crear Nuevo Registro")        #C
-        print("2. Mostrar Todos los Registros") #R
-        print("3. Acualizar Registros por ID")  #U
-        print("4. Eliminar Registro por ID")    #D
+        print("1. Crear Nuevo Registro ")        #CREATE
+        print("2. Mostrar Todos los Registros ") #RREAD
+        print("3. Acualizar Registros por ID ")  #UPDATE
+        print("4. Eliminar Registro por ID ")    #DELETE
         print("5. Salir")
         print("-" * 40)
         opcion = input("favor digite una de las opciones: ")
