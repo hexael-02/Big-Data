@@ -1,0 +1,120 @@
+# main.py
+
+import os
+import csv
+from io import StringIO
+import psycopg2
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
+
+# Cargar variables de entorno
+load_dotenv()
+
+# --- Configuración de Supabase/PostgreSQL ---
+DB_HOST = os.getenv("SUPABASE_HOST")
+DB_DATABASE = os.getenv("SUPABASE_DATABASE")
+DB_USER = os.getenv("SUPABASE_USER")
+DB_PASSWORD = os.getenv("SUPABASE_PASSWORD")
+DB_PORT = os.getenv("SUPABASE_PORT")
+
+if not all([DB_HOST, DB_USER, DB_PASSWORD]):
+    print("Error: Asegúrate de que las variables de entorno de Supabase estén configuradas en el archivo .env")
+    exit()
+
+# --- Instancia de FastAPI ---
+app = FastAPI(title="Supabase CSV Exporter")
+
+# --- Funciones Auxiliares ---
+
+def get_db_connection():
+    """Establece y devuelve una conexión a la base de datos."""
+    try:
+        conn = psycopg2.connect(
+            host=DB_HOST,
+            database=DB_DATABASE,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            port=DB_PORT,
+            # Asegúrate de usar SSL para conexiones a Supabase si es necesario,
+            # dependiendo de la configuración de tu proveedor.
+            # sslmode='require'
+        )
+        return conn
+    except Exception as e:
+        print(f"Error al conectar con la base de datos: {e}")
+        raise HTTPException(status_code=500, detail="Error de conexión a la base de datos")
+
+def fetch_table_data(table_name: str):
+    """Obtiene todos los datos de una tabla específica y sus encabezados."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Consulta para obtener los datos de la tabla
+        # ¡Advertencia! Esto es vulnerable a inyección SQL si 'table_name' no se valida.
+        cur.execute(f"SELECT * FROM {table_name};")
+
+        # Obtener los nombres de las columnas (encabezados)
+        column_names = [desc[0] for desc in cur.description]
+
+        # Obtener todas las filas
+        data = cur.fetchall()
+
+        cur.close()
+        return column_names, data
+
+    except psycopg2.Error as e:
+        # psycopog2.Error se maneja aquí como un error de consulta SQL
+        raise HTTPException(status_code=400, detail=f"Error en la consulta SQL para la tabla {table_name}: {e}")
+    finally:
+        # Asegura que la conexión se cierre
+        if conn:
+            conn.close()
+
+def generate_csv_stream(column_names, data):
+    """Generador que escribe los datos en un buffer de CSV y lo transmite."""
+    
+    # Usamos StringIO para escribir el CSV en un búfer de memoria
+    buffer = StringIO()
+    writer = csv.writer(buffer)
+
+    # 1. Escribir los encabezados
+    writer.writerow(column_names)
+    
+    # El primer 'yield' envía los encabezados inmediatamente
+    yield buffer.getvalue()
+    buffer.seek(0)
+    buffer.truncate(0)
+
+    # 2. Escribir las filas de datos
+    for row in data:
+        writer.writerow(row)
+        # 'yield' envía el fragmento de datos al cliente
+        yield buffer.getvalue()
+        # Limpiar el búfer para el siguiente fragmento
+        buffer.seek(0)
+        buffer.truncate(0)
+
+# --- Endpoint de la API ---
+
+@app.get("/descargar/{table_name}", tags=["Descarga CSV"])
+async def download_csv(table_name: str):
+    """
+    Descarga todos los datos de la tabla especificada en formato CSV.
+    
+    Ejemplo: /descargar/Customers
+    """
+    
+    # 1. Obtener datos de la base de datos
+    column_names, data = fetch_table_data(table_name)
+    
+    # 2. Configurar la respuesta de transmisión
+    return StreamingResponse(
+        generate_csv_stream(column_names, data),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": f"attachment; filename={table_name}_export.csv",
+        }
+    )
