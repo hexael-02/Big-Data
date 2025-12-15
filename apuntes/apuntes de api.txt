@@ -1,0 +1,154 @@
+apiÑ un programa que sirve de puente entre 2 o mas aplicaciones para que estas se comuniquen entre si, 
+sin tener que dominar el mimso idioma
+
+en pocas palabras, es un traductor entre dos o mas sistemas .
+
+ejemplo : quero cominicar supabase con mi app 
+	1. mi app esta desarrollada en python
+	2. supabase esta desarrollado en posgretsql y c++
+
+	python y c++  no se entienden necesito una api en supabase para poder 
+	comunicarme con la api de supabase
+
+en supabase, creamos la base de datos y las tablas dentro de dicha base de datos
+
+en el proyecto local, instalamos la libreria supabase para que nuestro proyecto
+soporte el codigo necesario para interactuar con la api de supabase
+en supabase, tuvimos que generar una api key y una url por base de datos para
+pasarla al proyecto local de modo que ambos sistemas se pueda comunicar.
+
+dentro del entorno virtual: python -m venv NOMBRE_ENV
+
+pip install python-dotenv
+run
+pip install google-genai 
+run
+
+dentro de vscode 
+
+import os
+from google import genai
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+gemini_key: str = os.environ.get("GOOGLE_GEMINI_KEY")
+
+
+gemini_client = genai.client(api_key=gemini_key)
+
+model = "gemini-2.5-flash"
+chat = gemini_client.chats.create(model)
+
+while True:
+	mensaje: str = input(">")
+	if mensaje == "exit".lower():
+		respuesta = chat.send_menssage_stream(message= voy a salir del chat, genera un mensaje de despedida)
+		print(respuesta)
+		break
+
+	respuesta = chat.send_message_stream(mensaje)
+	prin(respuesta.text)
+
+
+
+
+
+class antiguogenaiClient:
+	def __init__(key):
+	    self.key = validateKey(key)
+	def client(self):
+	    print(self.key)
+mykey = "holaklk"
+nuevoChat = antiguogenai(mykey)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
