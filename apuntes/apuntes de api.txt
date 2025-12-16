@@ -1,4 +1,4 @@
-apiÑ un programa que sirve de puente entre 2 o mas aplicaciones para que estas se comuniquen entre si, 
+api: un programa que sirve de puente entre 2 o mas aplicaciones para que estas se comuniquen entre si, 
 sin tener que dominar el mimso idioma
 
 en pocas palabras, es un traductor entre dos o mas sistemas .
@@ -62,6 +62,7 @@ class antiguogenaiClient:
 	    print(self.key)
 mykey = "holaklk"
 nuevoChat = antiguogenai(mykey)
+
 
 
 
